@@ -103,16 +103,23 @@ abstract class AbstractClassMetadataFactory implements ClassMetadataFactory
      *
      * @return array The ClassMetadata instances of all mapped classes.
      */
-    public function getAllMetadata()
+    public function getAllMetadata($bundle=null)
     {
         if ( ! $this->initialized) {
             $this->initialize();
         }
 
+        $bundle = $bundle."\\Entity";
+        
         $driver = $this->getDriver();
         $metadata = array();
         foreach ($driver->getAllClassNames() as $className) {
-            $metadata[] = $this->getMetadataFor($className);
+        	$item = $this->getMetadataFor($className);
+        	 
+        	if ($item->namespace==$bundle){
+        		$metadata[] = $this->getMetadataFor($className);
+        	}
+            //$metadata[] = $this->getMetadataFor($className);
         }
 
         return $metadata;
